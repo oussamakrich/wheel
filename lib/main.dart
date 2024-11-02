@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fortune_wheel/flutter_fortune_wheel.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'dart:async';
 import 'dart:math';
 
+import 'package:whellspiner/banner.dart';
+
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  MobileAds.instance.initialize();
   runApp(MyApp());
 }
 
@@ -30,11 +35,86 @@ class _EnterWordsScreenState extends State<EnterWordsScreen> {
   List<String> words = [];
   TextEditingController controller = TextEditingController();
 
+  // InterstitialAd? _interstitialAd;
+  // int _numInterstitialLoadAttempts = 0;
+  // static const int maxFailedLoadAttempts = 3;
+
+  // void _showInterstitialAd() {
+  //   if (_interstitialAd == null) {
+  //     print('Warning: attempt to show interstitial before loaded.');
+  //     _navigateToSpinWheel();
+  //     return;
+  //   }
+  //   _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+  //     onAdShowedFullScreenContent: (InterstitialAd ad) =>
+  //         print('ad onAdShowedFullScreenContent.'),
+  //     onAdDismissedFullScreenContent: (InterstitialAd ad) {
+  //       print('$ad onAdDismissedFullScreenContent.');
+  //       ad.dispose();
+  //       _createInterstitialAd();
+  //       _navigateToSpinWheel();
+  //     },
+  //     onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+  //       print('$ad onAdFailedToShowFullScreenContent: $error');
+  //       ad.dispose();
+  //       _createInterstitialAd();
+  //       _navigateToSpinWheel();
+  //     },
+  //   );
+  //   _interstitialAd!.show();
+  //   _interstitialAd = null;
+  // }
+
+  void _navigateToSpinWheel() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SpinWheelScreen(words: words),
+      ),
+    );
+  }
+
+  // void _createInterstitialAd() {
+  //   InterstitialAd.load(
+  //     adUnitId:
+  //         'ca-app-pub-3242400441111907/2494052030', // Your Android ad unit ID
+  //     request: const AdRequest(),
+  //     adLoadCallback: InterstitialAdLoadCallback(
+  //       onAdLoaded: (InterstitialAd ad) {
+  //         print('$ad loaded');
+  //         _interstitialAd = ad;
+  //         _numInterstitialLoadAttempts = 0;
+  //         _interstitialAd!.setImmersiveMode(true);
+  //       },
+  //       onAdFailedToLoad: (LoadAdError error) {
+  //         print('InterstitialAd failed to load: $error.');
+  //         _numInterstitialLoadAttempts += 1;
+  //         _interstitialAd = null;
+  //         if (_numInterstitialLoadAttempts < maxFailedLoadAttempts) {
+  //           _createInterstitialAd();
+  //         }
+  //       },
+  //     ),
+  //   );
+  // }
+
+  @override
+  void initState() {
+    super.initState();
+    // _createInterstitialAd();
+  }
+
+  @override
+  void dispose() {
+    // _interstitialAd!.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Enter Words',
           style: TextStyle(
               color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
@@ -143,16 +223,8 @@ class _EnterWordsScreenState extends State<EnterWordsScreen> {
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: words.isNotEmpty
-                  ? () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SpinWheelScreen(words: words),
-                        ),
-                      );
-                    }
-                  : null,
+              // onPressed: words.isNotEmpty ? _showInterstitialAd : null,
+              onPressed: words.isNotEmpty ? _navigateToSpinWheel : null,
               style: ElevatedButton.styleFrom(
                 backgroundColor: words.isNotEmpty ? Colors.teal : Colors.grey,
                 shape: RoundedRectangleBorder(
@@ -172,6 +244,7 @@ class _EnterWordsScreenState extends State<EnterWordsScreen> {
           ],
         ),
       ),
+      bottomNavigationBar: MyBottomBar(),
     );
   }
 }

@@ -1,4 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.INTERNET" />
+        <uses-permission android:name="com.google.android.gms.permission.AD_ID"/>
+
     <application
         android:label="Word Spinner"
         android:name="${applicationName}"
@@ -30,6 +33,12 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+                    <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-3242400441111907~9306469448"/>
+            <!-- android:value="ca-app-pub-3242400441111907~3312633087"/> -->
+            <!-- android:value="ca-app-pub-4386090252794184~1307086779"/> -->
+            
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and
